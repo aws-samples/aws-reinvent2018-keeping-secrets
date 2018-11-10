@@ -136,13 +136,13 @@ You will need the ARN later.
 
 ### 6.  Build the CloudFormation VPC stack.
 
-Download the keeping-secrets-vpc.yaml file in this repository and run it through CloudFormation.
+Download the keeping-secrets-yyyymmdd-vpc.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation.
 If you like, specify different values for the fist and second octets of the VPC CIDR block.
 The other values just control the naming and tagging of resources.
 
 ### 7.  Build the CloudFormation WordPress stack.
 
-Download the keeping-secrets-vpc.yaml file in this repository and run it through CloudFormation.
+Download the keeping-secrets-yyyymmdd-wp.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation.
 There are two sections for parameters.
 The first section is for parameters you must update.
 The second section is for parameters whose default values are generally acceptable.
