@@ -24,7 +24,7 @@ SEC353 Keeping Secrets: Securing Your Data with AWS Cryptography
 
 In this chalk talk we will discuss an architecture that leverages data protection services including AWS CloudHSM, AWS Serets Manager, and AWS KMS.  Here's a diagram of what we will build.
 
-![Architecture Diagram](img/Keeping_Secrets_20181104.png)
+![Architecture Diagram](img/keeping-Secrets-20181104.png)
 
 Here are the main points of the architecture:
 
