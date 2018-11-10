@@ -161,7 +161,7 @@ The second section is for parameters whose default values are generally acceptab
 
 - 8.1 - Browse to "http://" followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack.  You should see the default WordPress site.
 
-- 8.2 - Using the Secrets Manager console, selec the secret and enable rotation of the secret, set the rotation period to 30 days and choose "Use this secret."  Wait for the rotation to complete.  The default secret name is *wpdemo*.  You should still be able to browse the default WordPress site.
+- 8.2 - Using the Secrets Manager console, select the secret and enable rotation of the secret, set the rotation period to 30 days and choose "Use this secret."  Wait for the rotation to complete.  The default secret name is *wpdemo*.  You should still be able to browse the default WordPress site.
 
 - 8.3 - In the Secrets Manager console, select the secret and click *Rotate Immediately*.  Immediately after you do this, in another tab browse to the web site and click refresh a few times.  You will likely see a "broken database connection message but after several seconds the default WordPress site should appear.  A script on the EC2 server checks Secrets Manager every 10 seconds and updates the WordPress database password setting.
 
