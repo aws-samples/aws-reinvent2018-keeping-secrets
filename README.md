@@ -80,7 +80,7 @@ The resources built in this chalk talk include (but are not limited to):
 - an AWS KMS CMK
 - an AWS CloudTrail trail
 - an Amazon SNS topic
-- an Amazonb EC2 Elastic IP address
+- an Amazon EC2 Elastic IP address
 
 ## Security Notes
 
