@@ -160,6 +160,11 @@ The second section is for parameters whose default values are generally acceptab
 
 - Note that the e-mail address will be sent to LetsEncrypt and WordPress.  See the web sites for information about their privacy policies.
 
+
+### 8. Build the Cloudformation CloudHSM stack.
+Download the keeping-secrets-hsm-yyyymmdd.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation. There is no parameters required for this stack. The required inputs will be imported from VPC and WordPress stacks (CloudHSM Cluster's Subnets, WordPress Instance ID and Security Groups). Stack will build multiple Lambda functions orchastrated by 
+
+
 ### 8. Test the environment.
 
 - 8.1 - Browse to "http://" followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack.  You should see the default WordPress site.
