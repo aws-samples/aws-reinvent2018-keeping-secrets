@@ -56,6 +56,7 @@ You should be comfortable with:
 - AWS console usage
 - AWS services including Amazon EC2, Amazon SNS, AWS Step Functions and AWS CloudFormation
 - Networking technologies such as DNS
+- OpenSSL, TLS/SSL and PKI
 
 ### Domain
 
@@ -67,6 +68,10 @@ In these instructions, we will use the domain *example.com*.
 
 You will need an e-mail address.
 This e-mail address is used to configure WordPress, register a staging TLS/SSL certificate with LetsEncrypt, and to receive CloudTrail API events via Amazon SNS.
+
+### SSL Certificate Signed by Trusted CA
+
+You can generate a private key and Certificate Signing Request (CSR) and sign it with any of available Trusted CA. The Trusted certificate used in this demo is obtained from LetsEncrypt. 
 
 ### Charges
 
@@ -93,10 +98,8 @@ Examples:
 
 - The monitorsecret.sh shell script in the WordPress EC2 instance logs the new database password that came into effect from the rotation of the database secret via AWS Secrets Manager.   Logging such as password is obviously not a good practice.  It was done solely to provide an illustration of how the secret has changed.
 
-- The monitorsecret.sh and mariadb.newway.sh scripts fetch the database password and store it in environment variables.
-This is not a best practice and was done only for demonstrative purposes.
+- The monitorsecret.sh and mariadb.newway.sh scripts fetch the database password and store it in environment variables.This is not a best practice and was done only for demonstrative purposes.
 
-- SSL_Offloading_to_CloudHSM.txt is step by step guide supported with linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
 
 ## Build Procedure
 
@@ -182,21 +185,28 @@ The second section is for parameters whose default values are generally acceptab
 ### 9. SSL Offloading
 - Browse to **"http://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see the default WordPress site.
 - Browse to **"https://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see a warning page because of the the untrusted certificate created by LetsEncrypt Staging.
-- run the following OpenSSL command xxxxx 
+- Run the following OpenSSL command to check the current staging certificate 
+```
+$ openssl s_client -connect wp.aws-keeping-secrets.com:443
+```
+- SSL_Offloading_to_CloudHSM.md is step by step guide supported by linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
 
-### 8. Test the environment.
+### 10. Test the environment.
 
-- 8.1 - Browse to "http://" followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack.  You should see the default WordPress site.
+- 10.1 - Browse to "http://" followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack.  You should see the default WordPress site.
 
-- 8.2 - Using the Secrets Manager console, select the secret and enable rotation of the secret, set the rotation period to 30 days and choose "Use this secret."  Wait for the rotation to complete.  The default secret name is *wpdemo*.  You should still be able to browse the default WordPress site.
+- 10.2 - Using the Secrets Manager console, select the secret and enable rotation of the secret, set the rotation period to 30 days and choose "Use this secret."  Wait for the rotation to complete.  The default secret name is *wpdemo*.  You should still be able to browse the default WordPress site.
 
-- 8.3 - In the Secrets Manager console, select the secret and click *Rotate Immediately*.  Immediately after you do this, in another tab browse to the web site and click refresh a few times.  You will likely see a "broken database connection message but after several seconds the default WordPress site should appear.  A script on the EC2 server checks Secrets Manager every 10 seconds and updates the WordPress database password setting.
+- 10.3 - In the Secrets Manager console, select the secret and click *Rotate Immediately*.  Immediately after you do this, in another tab browse to the web site and click refresh a few times.  You will likely see a "broken database connection message but after several seconds the default WordPress site should appear.  A script on the EC2 server checks Secrets Manager every 10 seconds and updates the WordPress database password setting.
 
-### 9. Clean up
+### 11. Clean up
 
-- 9.1 - If you enabled the rotation of the database secret, you will see a CloudFormation stack with a name referencing the serverless application repository.  Delete that stack.
-- 9.2 - Delete the CloudFormation stack you built from keeping-secrets-wp.yaml.
-- 9.3 - Delete the CloudFormation stack you built from keeping-secrets-vpc.yaml.
-- 9.4 - Delete any S3 buckets that were created during the launch of the stack.  Note that if you do not delete them, S3 will expire the files 
-- 9.5 - Delete any CloudWatch LogGroups that were created that you no longer need.
+- 11.1 - If you enabled the rotation of the database secret, you will see a CloudFormation stack with a name referencing the serverless application repository.  Delete that stack.
+- 11.2 - Delete the CloudFormation stack you built from keeping-secrets-wp.yaml.
+- 11.3 - Delete the CloudFormation stack you built from keeping-secrets-vpc.yaml.
+- 11.4 - Delete the CloudFormation stack you built from keeping-secrets-hsm.yaml.
+- 11.5 - Delete any S3 buckets that were created during the launch of the stack.  Note that if you do not delete them, S3 will expire the files 
+- 11.6 - Delete any CloudWatch LogGroups that were created that you no longer need.
+- 11.6 - Delete CloudHSM Cluster by deleting HSM within the cluster first then delete the cluster afterward.
+
 
