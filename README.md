@@ -22,7 +22,7 @@ This repository contains materials that are being used for the AWS 2018 re:Inven
 
 SEC353 Keeping Secrets: Securing Your Data with AWS Cryptography
 
-In this chalk talk we will discuss an architecture that leverages data protection services including AWS CloudHSM, AWS Serets Manager, and AWS KMS.  Here's a diagram of what we will build.
+In this chalk talk we will discuss an architecture that leverages data protection services including AWS CloudHSM, AWS Secrets Manager, and AWS KMS.  Here's a diagram of what we will build.
 
 ![Architecture Diagram](img/keeping-secrets-20181110.png)
 
@@ -54,7 +54,7 @@ We will use us-east-1 in this documentation.
 You should be comfortable with:
 
 - AWS console usage
-- AWS services including Amazon EC2, Amazon SNS, AWS Step Function and AWS CloudFormation
+- AWS services including Amazon EC2, Amazon SNS, AWS Step Functions and AWS CloudFormation
 - Networking technologies such as DNS
 
 ### Domain
@@ -96,7 +96,7 @@ Examples:
 - The monitorsecret.sh and mariadb.newway.sh scripts fetch the database password and store it in environment variables.
 This is not a best practice and was done only for demonstrative purposes.
 
-- SSL_Offloading_to_CloudHSM.txt is step by step guide supported with linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trused Certificate with Private key stored on AWS CloudHSM.
+- SSL_Offloading_to_CloudHSM.txt is step by step guide supported with linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
 
 ## Build Procedure
 
@@ -162,7 +162,21 @@ The second section is for parameters whose default values are generally acceptab
 
 
 ### 8. Build the Cloudformation CloudHSM stack.
-Download the keeping-secrets-hsm-yyyymmdd.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation. There is no parameters required for this stack. The required inputs will be imported from VPC and WordPress stacks (CloudHSM Cluster's Subnets, WordPress Instance ID and Security Groups). Stack will build multiple Lambda functions orchastrated by 
+- Download the keeping-secrets-hsm-yyyymmdd.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation. There is no parameters required for this stack. 
+- The necessary inputs will be imported from VPC and WordPress stacks (CloudHSM Cluster's Subnets, WordPress Instance ID and Security Groups). 
+- Stack will build multiple Lambda functions orchestrated by AWS Step Function. Once the stack created successfully, check executionARN value under CloudFormation output tab (i.e. arn:aws:states:REGION:ACCOUNTID:execution:LaunchCloudHSMCluster-XXXXXXXXX:yyyyyyyy-aaaa-bbbb-cccc-zzzzzzzzzzzz). 
+- To monitor the progress of CloudHSM creation, please open AWS Step Functions console, click on LaunchCloudHSMCluster-XXXXXXXXX state machine then click on the execution ID which should match the above resource in execution ARN. 
+- Visual workflow and event history will provide the current status of CloudHSM cluster creation and initialization.
+- In the last step, WordPress EC2 instance will be bootstrapped with CloudHSM Client, Certificate and Cluster Security groups will have ingress rule with Security Groups of WordPress EC2 instance.
+- SSH to WordPress instance using SSM Session Manager and run the following commands to activate the cluster (https://docs.aws.amazon.com/cloudhsm/latest/userguide/activate-cluster.html):
+```
+    - $ /opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg
+    - aws-cloudhsm>enable_e2e
+    - aws-cloudhsm>listUsers
+    - aws-cloudhsm>loginHSM PRECO admin password
+    - aws-cloudhsm>changePswd PRECO admin <NewPassword>
+    - aws-cloudhsm>quit
+```
 
 
 ### 8. Test the environment.
