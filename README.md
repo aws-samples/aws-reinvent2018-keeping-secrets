@@ -29,7 +29,7 @@ In this chalk talk we will discuss an architecture that leverages data protectio
 Here are the main points of the architecture:
 
 - The web server includes is an Amazon Linux2 EC2 instance running Apache and WordPress.
-- TLS/SSL offloading is handled via the Apache integration to CloudHSM.
+- TLS/SSL offloading is handled via the Apache integration to AWS CloudHSM.
 - WordPress is installed on a volume encrypted by AWS KMS.
 - The backend database is an Amazon RDS MariaDB instance.
 - AWS Secrets Manager is used to rotate the password for the MariaDB database.
@@ -54,7 +54,7 @@ We will use us-east-1 in this documentation.
 You should be comfortable with:
 
 - AWS console usage
-- AWS services including Amazon EC2, Amazon SNS, and AWS CloudFormation
+- AWS services including Amazon EC2, Amazon SNS, AWS Step Function and AWS CloudFormation
 - Networking technologies such as DNS
 
 ### Domain
@@ -81,6 +81,7 @@ The resources built in this chalk talk include (but are not limited to):
 - an AWS CloudTrail trail
 - an Amazon SNS topic
 - an Amazon EC2 Elastic IP address
+- an AWS CloudHSM Cluster with single CloudHSM (i.e. $1.60 per hour in us-east-1)
 
 ## Security Notes
 
@@ -90,10 +91,12 @@ There are many considerations to take into account when deploying a production w
 
 Examples:
 
-- The monitorsecret.sh shell cript in the WordPress EC2 instance logs the new database password that came into effect from the rotation of the database secret via AWS Secrets Manager.   Logging such as password is obviously not a good practice.  It was done solely to provide an illustration of how the secret has changed.
+- The monitorsecret.sh shell script in the WordPress EC2 instance logs the new database password that came into effect from the rotation of the database secret via AWS Secrets Manager.   Logging such as password is obviously not a good practice.  It was done solely to provide an illustration of how the secret has changed.
 
 - The monitorsecret.sh and mariadb.newway.sh scripts fetch the database password and store it in environment variables.
 This is not a best practice and was done only for demonstrative purposes.
+
+- SSL_Offloading_to_CloudHSM.txt is step by step guide supported with linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trused Certificate with Private key stored on AWS CloudHSM.
 
 ## Build Procedure
 
