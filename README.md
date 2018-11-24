@@ -166,7 +166,7 @@ The second section is for parameters whose default values are generally acceptab
 - The necessary inputs will be imported from VPC and WordPress stacks (CloudHSM Cluster's Subnets, WordPress Instance ID and Security Groups). 
 - Stack will build multiple Lambda functions orchestrated by AWS Step Function. Once the stack created successfully, check executionARN value under CloudFormation output tab (i.e. arn:aws:states:REGION:ACCOUNTID:execution:LaunchCloudHSMCluster-XXXXXXXXX:yyyyyyyy-aaaa-bbbb-cccc-zzzzzzzzzzzz). 
 - To monitor the progress of CloudHSM creation, please open AWS Step Functions console, click on LaunchCloudHSMCluster-XXXXXXXXX state machine then click on the execution ID which should match the above resource in execution ARN. 
-- Visual workflow and event history will provide the current status of CloudHSM cluster creation and initialization.
+- Under Visual workflow and event history will have full visibility of the current status of CloudHSM cluster creation and initialization. Please note that it will take approximately 17-20min to complete the step function successfully 
 - In the last step, WordPress EC2 instance will be bootstrapped with CloudHSM Client, Certificate and Cluster Security groups will have ingress rule with Security Groups of WordPress EC2 instance.
 - SSH to WordPress instance using SSM Session Manager and run the following commands to activate the cluster (https://docs.aws.amazon.com/cloudhsm/latest/userguide/activate-cluster.html):
 ```
@@ -177,7 +177,12 @@ The second section is for parameters whose default values are generally acceptab
     aws-cloudhsm>changePswd PRECO admin <NewPassword>
     aws-cloudhsm>quit
 ```
+- Now you have an active CloudHSM Cluster and ready to use. Please check AWS CloudHSM Console to verify the state of the cluster.
 
+### 9. SSL Offloading
+- Browse to **"http://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see the default WordPress site.
+- Browse to **"https://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see a warning page because of the the untrusted certificate created by LetsEncrypt Staging.
+- run the following OpenSSL command xxxxx 
 
 ### 8. Test the environment.
 
