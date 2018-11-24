@@ -207,6 +207,4 @@ $ openssl s_client -connect wp.aws-keeping-secrets.com:443
 - 11.4 - Delete the CloudFormation stack you built from keeping-secrets-hsm.yaml.
 - 11.5 - Delete any S3 buckets that were created during the launch of the stack.  Note that if you do not delete them, S3 will expire the files 
 - 11.6 - Delete any CloudWatch LogGroups that were created that you no longer need.
-- 11.6 - Delete CloudHSM Cluster by deleting HSM within the cluster first then delete the cluster afterward.
-
-
+- 11.7 - Delete CloudHSM Cluster by deleting HSM within the cluster first then delete the cluster afterward.
