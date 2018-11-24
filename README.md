@@ -170,12 +170,12 @@ The second section is for parameters whose default values are generally acceptab
 - In the last step, WordPress EC2 instance will be bootstrapped with CloudHSM Client, Certificate and Cluster Security groups will have ingress rule with Security Groups of WordPress EC2 instance.
 - SSH to WordPress instance using SSM Session Manager and run the following commands to activate the cluster (https://docs.aws.amazon.com/cloudhsm/latest/userguide/activate-cluster.html):
 ```
-    - $ /opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg
-    - aws-cloudhsm>enable_e2e
-    - aws-cloudhsm>listUsers
-    - aws-cloudhsm>loginHSM PRECO admin password
-    - aws-cloudhsm>changePswd PRECO admin <NewPassword>
-    - aws-cloudhsm>quit
+    $ /opt/cloudhsm/bin/cloudhsm_mgmt_util /opt/cloudhsm/etc/cloudhsm_mgmt_util.cfg
+    aws-cloudhsm>enable_e2e
+    aws-cloudhsm>listUsers
+    aws-cloudhsm>loginHSM PRECO admin password
+    aws-cloudhsm>changePswd PRECO admin <NewPassword>
+    aws-cloudhsm>quit
 ```
 
 
