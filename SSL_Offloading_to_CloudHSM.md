@@ -42,18 +42,19 @@ aws-cloudhsm>loginHSM -u CU -s <CU_username> -p <CU_password>
 Command: genSymKey -t 31 -s 16 -sess -l wrapping_key_for_import
 ```
 9- Import your existing private key into an HSM
-importPrivateKey -f <web_server_existing.key> -l <web_server_imported_key> -w <wrapping_key_handle>
+- importPrivateKey -f <web_server_existing.key> -l <web_server_imported_key> -w <wrapping_key_handle>
 ```
 Command: importPrivateKey -f /home/ec2-user/privkey.pem -l LEReal -w 6
 ```
 
-10- Export the private key in fake PEM format and save locally then exit
-getCaviumPrivKey -k <private_key_handle> -out <web_server_fake_PEM.key>
+10- Export the private key in fake PEM format and save locally then exit. This file doesn't contain the actual private key. It contains a reference to the private key that is stored on the HSM. Your web server uses the fake PEM private key file and the AWS CloudHSM dynamic
+engine for OpenSSL to offload SSL/TLS processing to an HSM  
+- getCaviumPrivKey -k <private_key_handle> -out <web_server_fake_PEM.key>
 ```
 Command: getCaviumPrivKey -k 8 -out /home/ec2-user/privkeyFAKE.pem
 Command: exit
 ```
-11- Remove the actual Private key from web Server
+11- Remove the actual Private key from web Server as we no longer need it to be stored on the instance
 ```
 $ rm /home/ec2-home/privkey.pem
 $ ls /home/ec2-user/ | grep .pem
