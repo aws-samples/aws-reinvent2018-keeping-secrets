@@ -189,7 +189,7 @@ The second section is for parameters whose default values are generally acceptab
 ```
 $ openssl s_client -connect wp.aws-keeping-secrets.com:443
 ```
-- SSL_Offloading_to_CloudHSM.md is step by step guide supported by linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
+- [SSL_Offloading_to_CloudHSM.md](https://github.com/aws-samples/aws-reinvent2018-keeping-secrets/blob/master/SSL_Offloading_to_CloudHSM.md) is step by step guide supported by linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
 
 ### 10. Test the environment.
 
