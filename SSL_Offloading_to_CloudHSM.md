@@ -1,4 +1,7 @@
-1- Download and install CloudHSM OpenSSL Dynamic Engine Client for Amazon Linux 2:
+![SSL Offloading Flowchart](img/SSL_Offloading_Flowchart.png)
+
+
+1- Download and install  AWS CloudHSM dynamic engine for OpenSSL for Amazon Linux 2:
 ```
 $ wget https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-dyn-latest.el7.x86_64.rpm
 $ sudo yum install -y ./cloudhsm-client-dyn-latest.el7.x86_64.rpm
@@ -64,6 +67,10 @@ privkeyFAKE.pem
 
 # Update Apache httpd config files with the location of Trusted Certificate and Fake Private Key
 
+12- Stop httpd service.
+```
+$ sudo systemctl stop httpd
+```
 13- Create new conf file for Prod Certificate.
 ```
 $ cp /etc/httpd/conf/httpd-le-ssl.conf /etc/httpd/conf/httpd-hsm-ssl.conf
@@ -79,12 +86,7 @@ with locations of Trusted Certificate and Fake Private Key
 SLCertificateFile /home/ec2-user/fullchain.pem
 SSLCertificateKeyFile /home/ec2-user/privkeyFAKE.pem
 ```
-
-15- Stop httpd service.
-```
-$ sudo systemctl stop httpd
-```
-16- Edit httpd config file with newly created ssl config file then save:
+15- Edit httpd config file with newly created ssl config file then save:
 ```
 $ vi /etc/httpd/conf/httpd.conf
 ```
@@ -96,11 +98,11 @@ With
 ```
 Include /etc/httpd/conf/httpd-hsm-ssl.conf
 ```
-17- Backup etc/httpd/conf.d/ssl.conf 
+16- Backup etc/httpd/conf.d/ssl.conf 
 ```
 $ sudo cp /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.backup
 ```
-18- Edit the file with to use CloudHSM OpenSSL Dynamic Engine:
+17- Edit the file with to use CloudHSM OpenSSL Dynamic Engine:
 ```
 $ vi /etc/httpd/conf.d/ssl.conf
 ```
@@ -112,18 +114,18 @@ With
 ```
 SSLCryptoDevice cloudhsm
 ```
-19- For Amazon Linux 2, add the below line under the [Service] section in the file /lib/systemd/system/httpd.service: 
+18- For Amazon Linux 2, add the below line under the [Service] section in the file /lib/systemd/system/httpd.service: 
 ```
 $ vi /lib/systemd/system/httpd.service
 EnvironmentFile=/etc/sysconfig/httpd
 ```
-20- Create /etc/sysconfig/httpd and add n3fips_password as environmental variable.
+19- Create /etc/sysconfig/httpd and add n3fips_password as environmental variable.
 ```
 $ touch /etc/sysconfig/httpd
 $ vi /etc/sysconfig/httpd
 n3fips_password=<CU_user_name>:<password>
 ```
-21- Start httpd service.
+20- Start httpd service.
 ```
 $ sudo systemctl start httpd
 ```
