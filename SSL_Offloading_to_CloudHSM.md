@@ -1,6 +1,7 @@
-## SSL Offloading Step by Step Guide
+## SSL Offloading to CloudHSM - Step by Step Guide
 
 **SSL Offloading Flowchart**
+
 ![SSL Offloading Flowchart](img/SSL_Offloading_Flowchart.png)
 
 
