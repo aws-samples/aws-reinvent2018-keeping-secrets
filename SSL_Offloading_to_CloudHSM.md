@@ -1,4 +1,4 @@
-## SSL Offloading to CloudHSM - Step by Step Guide
+# SSL Offloading to CloudHSM - Step by Step Guide
 
 **SSL Offloading Flowchart**
 
@@ -69,7 +69,7 @@ fullchain.pem
 privkeyFAKE.pem
 ```
 
-# Update Apache httpd config files with the location of Trusted Certificate and Fake Private Key
+## Update Apache httpd config files with the location of Trusted Certificate and Fake Private Key
 
 12- Stop httpd service.
 ```
