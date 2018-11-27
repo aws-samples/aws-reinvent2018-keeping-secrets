@@ -69,6 +69,9 @@ In these instructions, we will use the domain *example.com*.
 You will need an e-mail address.
 This e-mail address is used to configure WordPress, register a staging TLS/SSL certificate with LetsEncrypt, and to receive CloudTrail API events via Amazon SNS.
 
+### EC2 Instance SSH Key Pair
+Please create SSH Key Pair to access WordPress EC2 Instance as this will be required in CloudFormation WordPress stack.
+
 ### SSL Certificate Signed by Trusted CA
 
 You can generate a private key and Certificate Signing Request (CSR) and sign it with any of available Trusted CA. The Trusted certificate used in this demo is obtained from LetsEncrypt. 
@@ -167,9 +170,9 @@ The second section is for parameters whose default values are generally acceptab
 ### 8. Build the Cloudformation CloudHSM stack.
 - Download the keeping-secrets-hsm-yyyymmdd.yaml file in this repository (where yyyymmdd represents the version date) and run it through CloudFormation. There is no parameters required for this stack. 
 - The necessary inputs will be imported from VPC and WordPress stacks (CloudHSM Cluster's Subnets, WordPress Instance ID and Security Groups). 
-- Stack will build multiple Lambda functions orchestrated by AWS Step Function. Once the stack created successfully, check executionARN value under CloudFormation output tab (i.e. arn:aws:states:REGION:ACCOUNTID:execution:LaunchCloudHSMCluster-XXXXXXXXX:yyyyyyyy-aaaa-bbbb-cccc-zzzzzzzzzzzz). 
+- Stack will build multiple Lambda functions orchestrated by AWS Step Functions. Once the stack created successfully, check executionARN value under CloudFormation output tab (i.e. arn:aws:states:REGION:ACCOUNTID:execution:LaunchCloudHSMCluster-XXXXXXXXX:yyyyyyyy-aaaa-bbbb-cccc-zzzzzzzzzzzz). 
 - To monitor the progress of CloudHSM creation, please open AWS Step Functions console, click on LaunchCloudHSMCluster-XXXXXXXXX state machine then click on the execution ID which should match the above resource in execution ARN. 
-- Under Visual workflow and event history will have full visibility of the current status of CloudHSM cluster creation and initialization. Please note that it will take approximately 17-20min to complete the step function successfully.
+- Under Visual workflow and event history will have full visibility of the current status of CloudHSM cluster creation and initialization. Please note that it will take approximately 17-20min to complete AWS Step Functions successfully.
 
 ![CloudHSM Step Functions Visual Workflow Diagram](img/CloudHSM-Step-Functions.png)
 
@@ -183,14 +186,14 @@ The second section is for parameters whose default values are generally acceptab
     aws-cloudhsm>changePswd PRECO admin <NewPassword>
     aws-cloudhsm>quit
 ```
-- Now you have an active CloudHSM Cluster and ready to use. Please check AWS CloudHSM Console to verify the state of the cluster.
+- Now you have an active CloudHSM Cluster and ready to use. Please check AWS CloudHSM Console to verify the state of the cluster. It might takes couple of minutes to be changed from "Initialized" to "Active" State.
 
 ### 9. SSL Offloading
 - Browse to **"http://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see the default WordPress site.
 - Browse to **"https://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack. You should see a warning page because of the the untrusted certificate created by LetsEncrypt Staging.
-- Run the following OpenSSL command to check the current staging certificate 
+- Run the following OpenSSL command to check the current staging certificate:
 ```
-$ openssl s_client -connect wp.aws-keeping-secrets.com:443
+$ openssl s_client -connect <YOUR_FQDN>:443
 ```
 - [SSL_Offloading_to_CloudHSM.md](https://github.com/aws-samples/aws-reinvent2018-keeping-secrets/blob/master/SSL_Offloading_to_CloudHSM.md) is step by step guide supported by linux commands to migrated from LetsEncrypt staging/untrusted certificate to Trusted Certificate with Private key stored on AWS CloudHSM.
 

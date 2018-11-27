@@ -5,6 +5,8 @@
 ![SSL Offloading Flowchart](img/SSL_Offloading_Flowchart.png)
 
 
+## Configure CloudHSM
+
 1- Download and install  AWS CloudHSM dynamic engine for OpenSSL for Amazon Linux 2:
 ```
 $ wget https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-dyn-latest.el7.x86_64.rpm
@@ -28,12 +30,15 @@ aws-cloudhsm>ListUsers
 aws-cloudhsm>logoutHSM
 aws-cloudhsm>quit
 ```
+## Obtain Certificate from Trusted CA
 
 5- Download a production Private Key, Certificate and/or Certificate Chain signed by trusted CA and save them in a folder (i.e /home/ec2-user/):
 ```
 $ cp <Prod_Private_Key> /home/ec2-user/privkey.pem
 $ cp <Prod_Certificate_Chain> /home/ec2-user/fullchain.pem
 ```
+
+## Import Private Key to CloudHSM
 
 6- Start Key Management Utility Command line tool:
 ```
@@ -53,6 +58,7 @@ Command: genSymKey -t 31 -s 16 -sess -l wrapping_key_for_import
 ```
 Command: importPrivateKey -f /home/ec2-user/privkey.pem -l LEReal -w 6
 ```
+## Export Fake PEM Private key to the instance
 
 10- Export the private key in fake PEM format and save locally then exit. This file doesn't contain the actual private key. It contains a reference to the private key that is stored on the HSM. Your web server uses the fake PEM private key file and the AWS CloudHSM dynamic
 engine for OpenSSL to offload SSL/TLS processing to an HSM.
@@ -61,6 +67,9 @@ engine for OpenSSL to offload SSL/TLS processing to an HSM.
 Command: getCaviumPrivKey -k 8 -out /home/ec2-user/privkeyFAKE.pem
 Command: exit
 ```
+
+## Remove Actual Private key from the instance
+
 11- Remove the actual Private key from web server as we no longer need it to be stored on the instance.
 ```
 $ rm /home/ec2-home/privkey.pem
@@ -69,7 +78,7 @@ fullchain.pem
 privkeyFAKE.pem
 ```
 
-## Update Apache httpd config files with the location of Trusted Certificate and Fake Private Key
+## Configure Apache with Fake PEM and Certificate
 
 12- Stop httpd service.
 ```
@@ -134,7 +143,8 @@ n3fips_password=<CU_user_name>:<password>
 $ sudo systemctl start httpd
 ```
 
-# Testing and Verifying:
+# Verify
+
 Browse to **"https://"** followed by the fully-qualified domain name you entered when you built the WordPress CloudFormation stack.
 Trusted Certificate now in use with Green Lock (Yes, you made it!)
 
