@@ -154,5 +154,5 @@ $ journalctl -f -u cloudhsm-client
 ```
 Run the following from end user machine and check the output for the certificate:
 ```
-$ openssl s_client -connect wp.aws-keeping-secrets.com:443
+$ openssl s_client -connect <YOUR_FQDM>:443
 ```
