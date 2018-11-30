@@ -207,7 +207,7 @@ $ openssl s_client -connect <YOUR_FQDN>:443
 
 ### 11. Clean up
 
-- 11.1 - If you enabled the rotation of the database secret, you will see a CloudFormation stack with a name referencing the serverless application repository.  Delete that stack.
+- 11.1 - If you enabled the rotation of the database secret then (1) disable the rotation of the secret and (2) delete the CloudFormation stack with a name referencing the serverless application repository.
 - 11.2 - Delete the CloudFormation stack you built from keeping-secrets-wp.yaml.
 - 11.3 - Delete the CloudFormation stack you built from keeping-secrets-vpc.yaml.
 - 11.4 - Delete the CloudFormation stack you built from keeping-secrets-hsm.yaml.
