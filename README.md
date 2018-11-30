@@ -208,9 +208,9 @@ $ openssl s_client -connect <YOUR_FQDN>:443
 ### 11. Clean up
 
 - 11.1 - If you enabled the rotation of the database secret then (1) disable the rotation of the secret and (2) delete the CloudFormation stack with a name referencing the serverless application repository.
-- 11.2 - Delete the CloudFormation stack you built from keeping-secrets-wp.yaml.
-- 11.3 - Delete the CloudFormation stack you built from keeping-secrets-vpc.yaml.
-- 11.4 - Delete the CloudFormation stack you built from keeping-secrets-hsm.yaml.
+- 11.2 - Delete the CloudFormation stack you built from keeping-secrets-hsm.yaml.
+- 11.3 - Delete the CloudFormation stack you built from keeping-secrets-wp.yaml.
+- 11.4 - Delete the CloudFormation stack you built from keeping-secrets-vpc.yaml.
 - 11.5 - Delete any S3 buckets that were created during the launch of the stack.  Note that if you do not delete them, S3 will expire the files 
 - 11.6 - Delete any CloudWatch LogGroups that were created that you no longer need.
 - 11.7 - **Delete CloudHSM Cluster by deleting HSM within the cluster first then delete the cluster afterward.**
